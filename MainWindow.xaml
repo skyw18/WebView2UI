@@ -1,0 +1,23 @@
+﻿<Window x:Class="WebView2UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WebView2UI"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        mc:Ignorable="d"
+        local:WindowBlur.IsEnabled="True"
+        Title="MainWindow" Background="Transparent" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" Width="504" Height="404">
+    <!--1. 使用WindowBlur来实现毛玻璃效果 参考代码见：https://blog.walterlv.com/post/create-blur-background-window.html#wpf-blureffect -->
+    <!--   使用 AllowsTransparency="True" WindowStyle="None" Background="Transparent"  来实现窗口透明无边框效果，然后通过webview2里的html5来实现窗口边界效果-->
+    <!--   但这种方法需要使用 AllowsTransparency="True" 性能消耗较大，生产中不建议使用 https://blog.walterlv.com/post/wpf-transparent-window-without-allows-transparency.html -->
+    <!--2. 所以另一种方法是放弃通过Webview2来实现窗口边界效果，而是直接使用wpf自带的窗口边界效果，https://blog.walterlv.com/post/win10/2017/10/02/wpf-transparent-blur-in-windows-10.html -->
+    <!--3. 或者窗口设为全屏，使用WindowBlur全屏毛玻璃，然后webview2+html5实现浮窗，这样性能消耗较小，但是需要自己在html5里实现窗口拖动和缩放等功能-->
+    <Grid>
+        <!--此处设定了一张几乎透明的背景图片，Opacity尽可能低，如果设太低，则webview2上的控件无法点击，如果太高，则背景图片会太明显-->
+        <Image Source="Resource\back.png" Stretch="Fill" Opacity="0.2"/>
+        <!--Webview2的Source可以在XAML设定，格式为"http://www.baidu.com"（网络资源），或者"file:///e://index.html"（本地资源），也可以在代码之中设定 -->
+        <!--可以在XAML之中设置透明度 DefaultBackgroundColor="Transparent"  ，也可以在后台代码之中设置透明度 -->
+        <wv2:WebView2 Name="webView" />
+    </Grid>
+</Window>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      button {
+        width: 150px;
+        height: 50px;
+        border-radius: 30px;
+        font-size: 15px;
+        background-color: rgba(105, 202, 255, 0.5);
+        border: 1px solid rgb(69, 69, 69);
+      }
+
+      .input {
+        width: 330px;
+        height: 30px;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgb(70, 70, 70);
+        border-radius: 10px;
+      }
+
+      div.login,
+      div.msg,
+      div.back {
+        top: 1px;
+        left: 1px;
+        position: absolute;
+        border-radius: 16px;
+        border: 1px solid rgb(69, 69, 69);
+      }
+
+      div.login,
+      div.back {
+        background: rgba(255, 255, 255, 0.1);
+        width: 500px;
+        height: 400px;
+      }
+
+      div.login {
+      }
+
+      div.msg.back {
+        position: absolute;
+        z-index: 100;
+        width: 500px;
+        height: 400px;
+        display: none;
+      }
+
+      div.msg.win {
+        width: 300px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.9);
+        top: 100px;
+        left: 100px;
+        text-align: center;
+        /* blur效果非常费资源，尽量别用，当wpf之中webview2控件DefaultBackgroundColor设为透明时无效 */
+        /* backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px); */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 背景图 -->
+    <!-- <div
+      class="back"
+      style="
+        background-image: url('img/bg2.jpg');
+        background-size: 100% 100%;
+        opacity: 0.2;
+        background-repeat: no-repeat;
+        z-index: -100;
+      "
+    ></div> -->
+    <div class="login">
+      <div style="height: 170px; text-align: center">
+        <img src="img/logo.png" style="height: 130px; margin-top: 20px" />
+      </div>
+      <div style="text-align: center; height: 65px">
+        <input placeholder="UserName" class="input" type="text" />
+      </div>
+      <div style="text-align: center; height: 65px">
+        <input placeholder="PassWord" class="input" type="password" />
+      </div>
+
+      <div style="text-align: center">
+        <button id="b_login" style="margin: 10px 20px 0px 0px">登录</button>
+        <button id="b_quit" style="margin: 10px 0px 0px 20px">退出</button>
+      </div>
+    </div>
+
+    <!-- msg窗口代码开始 -->
+    <div class="msg back">
+      <div class="msg win">
+        <div style="height: 60px; padding-top: 50px">
+          <span style="text-align: center">用户名或者密码错误！</span>
+        </div>
+        <button id="b_msg_close">确定</button>
+      </div>
+    </div>
+
+    <!-- msg窗口代码结束 -->
+
+    <script>
+      "use strict";
+
+      var login_div = document.querySelector("div.login");
+      var login_btn = document.querySelector("button#b_login");
+      var quit_btn = document.querySelector("button#b_quit");
+      var msg_btn = document.querySelector("button#b_msg_close");
+
+      function get_user_info() {
+        let json = {};
+        json.username = document.querySelector("input[type=text]").value;
+        json.password = document.querySelector("input[type=password]").value;
+        return json;
+      }
+
+      login_btn.addEventListener("click", function (e) {
+        let json = {};
+        json.act = this.id;
+        //可以主动放在json串之中发送给WPF，也可以在WPF之中通过ExecuteScriptWithResultAsync方法调用get_user_info()函数获取
+        // json.username = document.querySelector("input[type=text]").value;
+        // json.password = document.querySelector("input[type=password]").value;
+        send_json(json);
+      });
+
+      quit_btn.addEventListener("click", function (e) {
+        let json = {};
+        json.act = this.id;
+        send_json(json);
+      });
+
+      msg_btn.addEventListener("click", function (e) {
+        let json = {};
+        json.act = this.id;
+        json.class = "msg";
+        send_json(json);
+      });
+
+      login_div.addEventListener("mousedown", function (e) {
+        let json = {};
+        json.act = "mouse_left_down";
+        send_json(json);
+      });
+
+      login_div.addEventListener("mouseup", function (e) {
+        let json = {};
+        json.act = "mouse_left_up";
+        send_json(json);
+      });
+
+      function show_msg() {
+        let msg = document.querySelector("div.msg.back");
+        msg.style.display = "block";
+      }
+
+      function close_msg() {
+        let msg = document.querySelector("div.msg.back");
+        msg.style.display = "none";
+      }
+
+      ///发送json数据到WPF
+      function send_json(json) {
+        try {
+          window.chrome.webview.postMessage(json);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    </script>
+  </body>
+</html>
