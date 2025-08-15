@@ -1,5 +1,11 @@
 # WebView2UI - 在WPF之中使用WebView2的一些经验总结
 
+使用自定义的WindowBlur类配合WebView2实现了圆角毛玻璃半透明背景的浮窗，可以使用鼠标拖动，同时将WebView2常用的一些功能做了演示，详细说明参考XAML和CS文档。
+
+App下的index.html和图片等资源文件放在Resource目录下。
+
+
+
 webview简介与生命周期：[WPF 应用中的 WebView2 入门 - Microsoft Edge Developer documentation | Microsoft Learn](https://learn.microsoft.com/zh-cn/microsoft-edge/webview2/get-started/wpf)
 
 具体代码可以参考微软官方示例文档 [WPF 示例应用 - Microsoft Edge Developer documentation | Microsoft Learn](https://learn.microsoft.com/zh-cn/microsoft-edge/webview2/samples/webview2wpfbrowser)
